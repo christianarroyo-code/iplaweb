@@ -32,6 +32,65 @@ const defaultHighlightedCountries = [
   "Finland", "Turkey", "Australia",
 ]
 
+const PULSE_STYLE_ID = "ipla-globe-marker-pulse"
+
+function ensurePulseKeyframes() {
+  if (document.getElementById(PULSE_STYLE_ID)) return
+  const style = document.createElement("style")
+  style.id = PULSE_STYLE_ID
+  style.textContent = `
+    @keyframes ipla-marker-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+  `
+  document.head.appendChild(style)
+}
+
+function buildOfficeBadge(office: OfficeMarker, color: string) {
+  ensurePulseKeyframes()
+  // three-globe manages position/transform/display on the element it
+  // receives directly, so the actual visual styling lives on a child
+  // it never touches.
+  const wrapper = document.createElement("div")
+  wrapper.style.pointerEvents = "none"
+
+  const badge = document.createElement("div")
+  badge.style.cssText = `
+    transform: translate(-50%, -130%);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    white-space: nowrap;
+  `
+  const dot = document.createElement("span")
+  dot.style.cssText = `
+    width: 8px;
+    height: 8px;
+    background: ${color};
+    border-radius: 50%;
+    box-shadow: 0 0 8px ${color};
+    animation: ipla-marker-pulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+  `
+  const text = document.createElement("span")
+  text.style.cssText = `
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ffffff;
+  `
+  text.textContent = office.label
+  badge.appendChild(dot)
+  badge.appendChild(text)
+  wrapper.appendChild(badge)
+  return wrapper
+}
+
 export function GlobeLive({
   offices = defaultOffices,
   highlightedCountries = defaultHighlightedCountries,
@@ -76,15 +135,11 @@ export function GlobeLive({
         .pointColor(() => countryColor)
         .pointAltitude(0.012)
         .pointRadius(0.35)
-        .labelsData(offices)
-        .labelLat((d) => (d as OfficeMarker).location[0])
-        .labelLng((d) => (d as OfficeMarker).location[1])
-        .labelText((d) => (d as OfficeMarker).label)
-        .labelColor(() => "#1a1a1a")
-        .labelSize(1.1)
-        .labelDotRadius(0.35)
-        .labelAltitude(0.012)
-        .labelResolution(4)
+        .htmlElementsData(offices)
+        .htmlLat((d) => (d as OfficeMarker).location[0])
+        .htmlLng((d) => (d as OfficeMarker).location[1])
+        .htmlAltitude(0.02)
+        .htmlElement((d) => buildOfficeBadge(d as OfficeMarker, countryColor))
 
       const globeMaterial = world.globeMaterial() as { color?: { set: (c: string) => void } }
       globeMaterial.color?.set("#ffffff")
