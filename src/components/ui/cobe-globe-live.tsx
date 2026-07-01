@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useCallback, useState } from "react"
+import { useEffect, useRef, useCallback } from "react"
 import createGlobe from "cobe"
 
 interface LiveMarker {
   id: string
   location: [number, number]
+  label: string
 }
 
 interface GlobeLiveProps {
@@ -15,12 +16,12 @@ interface GlobeLiveProps {
 }
 
 const defaultMarkers: LiveMarker[] = [
-  { id: "sf", location: [37.78, -122.44] },
-  { id: "london", location: [51.51, -0.13] },
-  { id: "tokyo", location: [35.68, 139.65] },
-  { id: "paris", location: [48.86, 2.35] },
-  { id: "sydney", location: [-33.87, 151.21] },
-  { id: "nyc", location: [40.71, -74.01] },
+  { id: "sf", location: [37.78, -122.44], label: "San Francisco" },
+  { id: "london", location: [51.51, -0.13], label: "London" },
+  { id: "tokyo", location: [35.68, 139.65], label: "Tokyo" },
+  { id: "paris", location: [48.86, 2.35], label: "Paris" },
+  { id: "sydney", location: [-33.87, 151.21], label: "Sydney" },
+  { id: "nyc", location: [40.71, -74.01], label: "New York" },
 ]
 
 export function GlobeLive({
@@ -34,14 +35,6 @@ export function GlobeLive({
   const phiOffsetRef = useRef(0)
   const thetaOffsetRef = useRef(0)
   const isPausedRef = useRef(false)
-  const [liveViewers, setLiveViewers] = useState(2847)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveViewers((v) => Math.max(100, v + Math.floor(Math.random() * 21) - 8))
-    }, 400)
-    return () => clearInterval(interval)
-  }, [])
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     pointerInteracting.current = { x: e.clientX, y: e.clientY }
@@ -134,7 +127,7 @@ export function GlobeLive({
   return (
     <div className={`relative aspect-square select-none ${className}`}>
       <style>{`
-        @keyframes live-pulse {
+        @keyframes marker-pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.6; }
         }
@@ -147,7 +140,7 @@ export function GlobeLive({
           transition: "opacity 1.2s ease", borderRadius: "50%", touchAction: "none",
         }}
       />
-      {markers.map((m, i) => (
+      {markers.map((m) => (
         <div
           key={m.id}
           style={{
@@ -174,19 +167,12 @@ export function GlobeLive({
           <span style={{
             width: 8, height: 8, background: "#ff3b30", borderRadius: "50%",
             boxShadow: "0 0 8px #ff3b30",
-            animation: "live-pulse 1.5s ease-in-out infinite",
+            animation: "marker-pulse 1.5s ease-in-out infinite",
           }} />
           <span style={{
-            fontFamily: "monospace", fontSize: "0.6rem", fontWeight: 600,
-            letterSpacing: "0.1em", color: "#ff3b30", textTransform: "uppercase" as const,
-          }}>LIVE</span>
-          <span style={{
-            fontFamily: "system-ui, sans-serif", fontSize: "0.6rem",
-            color: "rgba(255,255,255,0.7)", paddingLeft: "0.4rem",
-            borderLeft: "1px solid rgba(255,255,255,0.2)",
-          }}>
-            {Math.floor(liveViewers * (0.3 + 0.7 * Math.pow(0.6, i))).toLocaleString()} watching
-          </span>
+            fontFamily: "system-ui, sans-serif", fontSize: "0.7rem", fontWeight: 600,
+            color: "#ffffff",
+          }}>{m.label}</span>
         </div>
       ))}
     </div>
