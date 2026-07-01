@@ -48,7 +48,7 @@ export function GlobeLive({
     let ro: ResizeObserver | undefined
     let cancelled = false
 
-    Promise.all([import("globe.gl"), import("three")]).then(([{ default: Globe }, THREE]) => {
+    import("globe.gl").then(({ default: Globe }) => {
       if (cancelled) return
       const highlightSet = new Set(highlightedCountries)
       const topology = worldTopology as unknown as Topology
@@ -60,7 +60,6 @@ export function GlobeLive({
       world = new Globe(el)
         .backgroundColor("rgba(0,0,0,0)")
         .showAtmosphere(false)
-        .globeMaterial(new THREE.MeshPhongMaterial({ color: "#ffffff" }))
         .polygonsData(countries)
         .polygonCapColor((d) =>
           highlightSet.has((d as GeoJSON.Feature).properties?.name)
@@ -86,6 +85,9 @@ export function GlobeLive({
         .labelDotRadius(0.35)
         .labelAltitude(0.012)
         .labelResolution(4)
+
+      const globeMaterial = world.globeMaterial() as { color?: { set: (c: string) => void } }
+      globeMaterial.color?.set("#ffffff")
 
       world.controls().autoRotate = true
       world.controls().autoRotateSpeed = 0.6
