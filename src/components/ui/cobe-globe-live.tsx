@@ -6,7 +6,7 @@ import createGlobe from "cobe"
 interface LiveMarker {
   id: string
   location: [number, number]
-  label: string
+  label?: string
 }
 
 interface GlobeLiveProps {
@@ -87,7 +87,7 @@ export function GlobeLive({
       phi: 0, theta: 0.2, dark: 0, diffuse: 1.5,
       mapSamples: 16000, mapBrightness: 10,
       baseColor: [0.95, 0.95, 0.95],
-      markerColor: [0.9, 0.2, 0.2],
+      markerColor: [0.667, 0.094, 0.173],
       glowColor: [0.94, 0.93, 0.91],
       markerElevation: 0.01,
       markers: markers.map((m) => ({ location: m.location, size: 0.02, id: m.id })),
@@ -140,7 +140,7 @@ export function GlobeLive({
           transition: "opacity 1.2s ease", borderRadius: "50%", touchAction: "none",
         }}
       />
-      {markers.map((m) => (
+      {markers.filter((m) => m.label).map((m) => (
         <div
           key={m.id}
           style={{
@@ -165,8 +165,8 @@ export function GlobeLive({
           }}
         >
           <span style={{
-            width: 8, height: 8, background: "#ff3b30", borderRadius: "50%",
-            boxShadow: "0 0 8px #ff3b30",
+            width: 8, height: 8, background: "#AA182C", borderRadius: "50%",
+            boxShadow: "0 0 8px #AA182C",
             animation: "marker-pulse 1.5s ease-in-out infinite",
           }} />
           <span style={{
