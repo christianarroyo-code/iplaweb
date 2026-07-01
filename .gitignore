@@ -19,6 +19,7 @@
 
 # production
 /build
+/dist-embed
 
 # misc
 .DS_Store
