@@ -71,27 +71,27 @@ function buildOfficeBadge(office: OfficeMarker, color: string) {
     transform: translate(-50%, -130%);
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.15rem 0.35rem;
+    gap: 0.18rem;
+    padding: 0.08rem 0.22rem;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    border-radius: 3px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    border-radius: 2px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.25);
     white-space: nowrap;
   `
   const dot = document.createElement("span")
   dot.style.cssText = `
-    width: 5px;
-    height: 5px;
+    width: 3.5px;
+    height: 3.5px;
     background: ${color};
     border-radius: 50%;
-    box-shadow: 0 0 6px ${color};
+    box-shadow: 0 0 4px ${color};
     animation: ipla-marker-pulse 1.5s ease-in-out infinite;
     flex-shrink: 0;
   `
   const text = document.createElement("span")
   text.style.cssText = `
     font-family: system-ui, sans-serif;
-    font-size: 0.5rem;
+    font-size: 0.4rem;
     font-weight: 600;
     color: #ffffff;
   `
