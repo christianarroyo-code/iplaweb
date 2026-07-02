@@ -133,7 +133,7 @@ export function GlobeLive({
   offices = defaultOffices,
   highlightedCountries = defaultHighlightedCountries,
   countryColor = "#AA182C",
-  baseColor = "#d8d8d8",
+  baseColor = "#222222",
   className = "",
 }: GlobeLiveProps) {
   const containerRef = useRef<HTMLDivElement>(null)
