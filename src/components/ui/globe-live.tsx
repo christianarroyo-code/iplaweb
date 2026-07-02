@@ -41,6 +41,7 @@ const defaultHighlightedCountries = [
 ]
 
 const LAND_DOT_RADIUS = 0.16
+const HIGHLIGHT_DOT_RADIUS = 0.26
 const OFFICE_DOT_RADIUS = 0.4
 
 const PULSE_STYLE_ID = "ipla-globe-marker-pulse"
@@ -125,7 +126,12 @@ async function buildLandDots(
 
   return (landDots as [number, number][]).map(([lat, lng]) => {
     const isHighlighted = highlightedFeatures.some((f) => geoContains(f, [lng, lat]))
-    return { lat, lng, color: isHighlighted ? countryColor : baseColor, radius: LAND_DOT_RADIUS }
+    return {
+      lat,
+      lng,
+      color: isHighlighted ? countryColor : baseColor,
+      radius: isHighlighted ? HIGHLIGHT_DOT_RADIUS : LAND_DOT_RADIUS,
+    }
   })
 }
 
